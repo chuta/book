@@ -1,5 +1,6 @@
 import {
   BOOK_PURCHASE,
+  KLARIFY_LOGO_URL,
   LAUNCH_EVENT,
   SITE_NAME,
   SITE_URL,
@@ -29,8 +30,16 @@ function layout(content: string): string {
       <td align="center">
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#0c0c12;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden;">
           <tr>
-            <td style="padding:28px 32px 12px;border-bottom:1px solid rgba(255,255,255,0.08);">
-              <p style="margin:0;font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:#10b981;font-weight:600;">Klarify</p>
+            <td style="padding:28px 32px 16px;border-bottom:1px solid rgba(255,255,255,0.08);">
+              <a href="https://klarify.africa" style="text-decoration:none;">
+                <img
+                  src="${KLARIFY_LOGO_URL}"
+                  alt="Klarify"
+                  width="100"
+                  height="28"
+                  style="display:block;border:0;outline:none;height:auto;max-width:100px;width:100px;"
+                />
+              </a>
             </td>
           </tr>
           <tr>
