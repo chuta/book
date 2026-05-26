@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
+import { SITE_LOGO, SITE_LOGO_ALT } from "@/lib/constants";
 
 const NAV_LINKS = [
   { label: "About", href: "#about" },
@@ -34,11 +35,12 @@ export function Navbar() {
       <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16 md:h-20">
         <a href="#" className="flex items-center gap-3">
           <Image
-            src="/images/klarify-logo.png"
-            alt="Klarify"
-            width={100}
-            height={28}
-            className="h-6 w-auto"
+            src={SITE_LOGO}
+            alt={SITE_LOGO_ALT}
+            width={140}
+            height={48}
+            className="h-9 md:h-10 w-auto"
+            priority
           />
         </a>
 

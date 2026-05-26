@@ -192,10 +192,9 @@ async function scheduleLaunchFollowUps(
 }
 
 export async function processRegistration(
-  data: RegistrationPayload
+  data: RegistrationPayload,
+  registrationId: string
 ): Promise<RegistrationResult> {
-  const registrationId = crypto.randomUUID();
-
   const [adminSent, confirmationSent, contactSynced, followUps] =
     await Promise.all([
       sendAdminNotification(data, registrationId),

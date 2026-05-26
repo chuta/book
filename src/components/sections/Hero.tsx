@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { BookPurchaseCTA } from "@/components/ui/BookPurchaseCTA";
-import { HERO_HEADLINES, LAUNCH_EVENT } from "@/lib/constants";
+import { HERO_HEADLINES, LAUNCH_EVENT, SITE_LOGO, SITE_LOGO_ALT } from "@/lib/constants";
 import { FadeIn } from "@/lib/animations";
 
 export function Hero() {
@@ -158,11 +158,11 @@ export function Hero() {
                 className="absolute right-8 top-4 glass-card rounded-xl p-3 z-20 shadow-xl hidden lg:block"
               >
                 <Image
-                  src="/images/klarify-logo.png"
-                  alt="Klarify"
-                  width={80}
-                  height={24}
-                  className="opacity-90"
+                  src={SITE_LOGO}
+                  alt={SITE_LOGO_ALT}
+                  width={100}
+                  height={36}
+                  className="h-8 w-auto opacity-90"
                 />
               </motion.div>
             </div>

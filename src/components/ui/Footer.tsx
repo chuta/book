@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { SITE_LOGO, SITE_LOGO_ALT } from "@/lib/constants";
 
 export function Footer() {
   return (
@@ -7,11 +8,11 @@ export function Footer() {
         <div className="grid md:grid-cols-3 gap-8 mb-12">
           <div>
             <Image
-              src="/images/klarify-logo.png"
-              alt="Klarify"
-              width={100}
-              height={28}
-              className="h-6 w-auto mb-4"
+              src={SITE_LOGO}
+              alt={SITE_LOGO_ALT}
+              width={140}
+              height={48}
+              className="h-9 w-auto mb-4"
             />
             <p className="text-sm text-muted leading-relaxed max-w-xs">
               Compliance intelligence and regulatory readiness infrastructure for

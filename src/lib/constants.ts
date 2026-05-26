@@ -1,5 +1,8 @@
 export const SITE_URL = "https://book.klarify.africa";
 
+export const SITE_LOGO = "/images/fgb.png";
+export const SITE_LOGO_ALT = "Founder's Guide Book Launch";
+
 export const BOOK_PURCHASE = {
   nigeria: {
     url: "https://selar.com/g5525p7n52",
