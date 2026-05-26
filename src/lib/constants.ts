@@ -3,7 +3,7 @@ export const SITE_URL = "https://book.klarify.africa";
 export const SITE_LOGO = "/images/fgb.png";
 export const SITE_LOGO_ALT = "Founder's Guide Book Launch";
 
-export const KLARIFY_LOGO_URL = "https://klarify.africa/klarify_logo.png";
+export const KLARIFY_LOGO_URL = `${SITE_URL}/images/logo_white.png`;
 
 export const BOOK_PURCHASE = {
   nigeria: {
