@@ -66,7 +66,7 @@ export function Hero() {
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-6">
                 <Button
                   href="#launch"
                   size="lg"

@@ -33,7 +33,7 @@ export function FinalCTA() {
               Register for Launch
             </Button>
 
-            <div className="w-full max-w-2xl">
+            <div className="w-full max-w-xl">
               <BookPurchaseCTA
                 location="final-cta"
                 layout="cards"

@@ -57,7 +57,7 @@ function PurchaseOption({
       whileHover={{ scale: 1.02, y: -1 }}
       whileTap={{ scale: 0.98 }}
       onClick={() => trackCTA(trackingLabel, location)}
-      className="group flex flex-1 items-center gap-4 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4 transition-colors hover:border-emerald-500/30 hover:bg-emerald-500/[0.06]"
+      className="group flex w-full items-center gap-4 rounded-xl border border-white/10 bg-white/[0.03] px-5 py-4 transition-colors hover:border-emerald-500/30 hover:bg-emerald-500/[0.06]"
     >
       <div
         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-xs font-semibold tracking-wide ${currencyClass}`}
@@ -68,7 +68,7 @@ function PurchaseOption({
         <p className="font-medium text-foreground group-hover:text-white transition-colors">
           {label}
         </p>
-        <p className="text-xs text-muted mt-0.5 truncate">{description}</p>
+        <p className="text-xs text-muted mt-0.5 leading-snug">{description}</p>
       </div>
       <svg
         className="h-4 w-4 shrink-0 text-muted group-hover:text-emerald-400 transition-colors"
@@ -97,6 +97,10 @@ export function BookPurchaseCTA({
 }: BookPurchaseCTAProps) {
   const alignClass =
     align === "center" ? "items-center text-center" : "items-start text-left";
+  const optionsClass =
+    align === "center"
+      ? "mx-auto flex w-full max-w-xl flex-col gap-3 sm:gap-4"
+      : "flex w-full max-w-xl flex-col gap-3 sm:gap-4";
 
   const options = (
     <>
@@ -129,7 +133,7 @@ export function BookPurchaseCTA({
   );
 
   return (
-    <div className={`flex flex-col gap-3 w-full ${alignClass}`}>
+    <div className={`flex flex-col gap-4 w-full ${alignClass}`}>
       {showLabel && (
         <p className="text-xs font-medium uppercase tracking-widest text-muted">
           Get the Book
@@ -137,15 +141,19 @@ export function BookPurchaseCTA({
       )}
 
       {layout === "cards" && (
-        <div className="grid w-full gap-3 lg:grid-cols-3 sm:grid-cols-2">{options}</div>
+        <div className={optionsClass}>{options}</div>
       )}
 
       {layout === "inline" && (
-        <div className="flex w-full flex-col gap-3 lg:flex-row">{options}</div>
+        <div
+          className={`${optionsClass} xl:max-w-none xl:flex-row xl:gap-4`}
+        >
+          {options}
+        </div>
       )}
 
       {layout === "stacked" && (
-        <div className="flex w-full max-w-md flex-col gap-3">{options}</div>
+        <div className={optionsClass}>{options}</div>
       )}
     </div>
   );
