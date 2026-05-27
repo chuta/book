@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { BookPurchaseCTA } from "@/components/ui/BookPurchaseCTA";
+import { ReadOnlineLinks } from "@/components/ui/ReadOnlineLinks";
 import { HERO_HEADLINES, LAUNCH_EVENT, SITE_LOGO, SITE_LOGO_ALT } from "@/lib/constants";
 import { FadeIn } from "@/lib/animations";
 
@@ -166,6 +167,10 @@ export function Hero() {
                 />
               </motion.div>
             </div>
+
+            <FadeIn delay={0.35} className="relative z-10 mt-8 max-w-md mx-auto lg:mx-0 lg:max-w-none">
+              <ReadOnlineLinks />
+            </FadeIn>
           </FadeIn>
         </div>
       </div>
