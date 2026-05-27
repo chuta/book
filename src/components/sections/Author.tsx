@@ -83,7 +83,7 @@ export function Author() {
                         <p className="font-medium text-foreground group-hover:text-emerald-400 transition-colors leading-snug">
                           {book.title}
                         </p>
-                        <p className="text-xs text-muted mt-1">Interactive flipbook</p>
+                        <p className="text-xs text-muted mt-1">Preview: TOC, foreword, preface & introduction</p>
                       </div>
                       <span className="shrink-0 inline-flex items-center gap-2 text-sm font-medium text-emerald-400">
                         Read Online

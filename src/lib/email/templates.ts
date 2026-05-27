@@ -217,3 +217,50 @@ export function launchFollowUpEmail(data: RegistrationPayload, variant: "followu
 
   return { subject, html, text };
 }
+
+export function purchaseSuccessEmail(input: {
+  name?: string | null;
+  productTitle?: string;
+  libraryUrl: string;
+  magicLink?: string | null;
+}) {
+  const firstName = input.name?.split(" ")[0] || "there";
+  const title = input.productTitle || SITE_NAME;
+  const subject = "Your Klarify Library access is ready";
+
+  const loginBlock = input.magicLink
+    ? `<p style="margin:0 0 16px;"><a href="${escapeHtml(input.magicLink)}" style="display:inline-block;background:#10b981;color:#041008;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;">Sign in to your library</a></p>
+       <p style="margin:0 0 24px;color:#a1a1aa;font-size:13px;">This secure link expires soon. You can always request a new one from the login page.</p>`
+    : `<p style="margin:0 0 24px;color:#a1a1aa;font-size:14px;">Visit the library and sign in with this email address to access your downloads.</p>`;
+
+  const html = layout(`
+    <h1 style="margin:0 0 12px;font-size:24px;line-height:1.3;color:#ffffff;">Payment confirmed, ${escapeHtml(firstName)}.</h1>
+    <p style="margin:0 0 20px;color:#a1a1aa;">Your purchase of <strong style="color:#f4f4f5;">${escapeHtml(title)}</strong> is ready in your personal library.</p>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;margin-bottom:24px;">
+      <tr>
+        <td style="padding:20px;">
+          <p style="margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#10b981;">Included formats</p>
+          <p style="margin:0;color:#f4f4f5;">PDF · Full pack (Mac .app + Windows .EXE in ZIP)</p>
+        </td>
+      </tr>
+    </table>
+    ${loginBlock}
+    <p style="margin:0 0 16px;"><a href="${escapeHtml(input.libraryUrl)}" style="color:#10b981;text-decoration:none;">Open your library →</a></p>
+    <p style="margin:0;color:#a1a1aa;font-size:14px;">Questions? Reply to this email at hello@klarify.africa.</p>
+  `);
+
+  const text = [
+    `Hi ${firstName},`,
+    "",
+    `Your purchase of ${title} is ready.`,
+    "",
+    `Library: ${input.libraryUrl}`,
+    input.magicLink ? `Sign in: ${input.magicLink}` : "",
+    "",
+    "Included: PDF and full pack (Mac .app + Windows .EXE in ZIP).",
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { subject, html, text };
+}

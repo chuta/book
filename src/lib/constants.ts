@@ -5,16 +5,27 @@ export const SITE_LOGO_ALT = "Founder's Guide Book Launch";
 
 export const KLARIFY_LOGO_URL = `${SITE_URL}/images/logo_white.png`;
 
+export const BOOK_PRODUCT_SLUGS = {
+  foundersGuide: "founders-guide",
+  seizingOpportunities: "seizing-opportunities",
+} as const;
+
 export const BOOK_PURCHASE = {
+  korapay: {
+    label: "Pay with Korapay",
+    description: "NGN · PDF + full download pack",
+    currency: "NGN",
+    checkoutPath: (slug: string) => `/checkout/${slug}`,
+  },
   nigeria: {
     url: "https://selar.com/g5525p7n52",
-    label: "Buy in Nigeria",
+    label: "Buy on Selar",
     description: "Pay in Naira via Selar",
     currency: "NGN",
   },
   international: {
     url: "https://chuta.gumroad.com/l/lghqcj",
-    label: "Buy Internationally",
+    label: "Buy on Gumroad",
     description: "USD & global cards via Gumroad",
     currency: "USD",
   },
@@ -205,10 +216,12 @@ export const AUTHOR = {
     {
       title: "The Founder's Guide to Building in Regulated Markets",
       readOnlinePath: "/founders/",
+      productSlug: BOOK_PRODUCT_SLUGS.foundersGuide,
     },
     {
       title: "Seizing Opportunities in the Digital Asset Economy",
       readOnlinePath: "/opportunities/",
+      productSlug: BOOK_PRODUCT_SLUGS.seizingOpportunities,
     },
   ],
 };
