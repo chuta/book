@@ -201,6 +201,16 @@ export const AUTHOR = {
     "CEO, Blockspace Technologies & Creator, Klarify",
     "Venture Partner, Adaverse VC",
   ],
+  books: [
+    {
+      title: "The Founder's Guide to Building in Regulated Markets",
+      readOnlinePath: "/founders/",
+    },
+    {
+      title: "Seizing Opportunities in the Digital Asset Economy",
+      readOnlinePath: "/opportunities/",
+    },
+  ],
 };
 
 export const LAUNCH_EVENT = {
