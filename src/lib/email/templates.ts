@@ -264,3 +264,122 @@ export function purchaseSuccessEmail(input: {
 
   return { subject, html, text };
 }
+
+function formatNgnEmail(kobo: number): string {
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(kobo / 100);
+}
+
+export function physicalPreorderCustomerEmail(input: {
+  name: string;
+  orderId: string;
+  bookTitle: string;
+  formatLabel: string;
+  quantity: number;
+  unitPriceKobo: number;
+  shippingKobo: number;
+  totalKobo: number;
+  streetAddress: string;
+  city: string;
+  state: string;
+  fulfillmentDays: number;
+}) {
+  const firstName = input.name.split(" ")[0] || input.name;
+  const subject = "Physical book pre-order confirmed";
+
+  const html = layout(`
+    <h1 style="margin:0 0 12px;font-size:24px;line-height:1.3;color:#ffffff;">Pre-order confirmed, ${escapeHtml(firstName)}.</h1>
+    <p style="margin:0 0 20px;color:#a1a1aa;">Thank you for your payment. We have received your physical book pre-order and will begin processing it shortly.</p>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom:24px;">
+      ${fieldRow("Order ID", input.orderId)}
+      ${fieldRow("Book", input.bookTitle)}
+      ${fieldRow("Format", input.formatLabel)}
+      ${fieldRow("Quantity", String(input.quantity))}
+      ${fieldRow("Unit price", formatNgnEmail(input.unitPriceKobo))}
+      ${fieldRow("Shipping (Nigeria)", formatNgnEmail(input.shippingKobo))}
+      ${fieldRow("Total paid", formatNgnEmail(input.totalKobo))}
+    </table>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;margin-bottom:24px;">
+      <tr>
+        <td style="padding:20px;">
+          <p style="margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#10b981;">Delivery address</p>
+          <p style="margin:0;color:#f4f4f5;line-height:1.6;">${escapeHtml(input.streetAddress)}<br/>${escapeHtml(input.city)}, ${escapeHtml(input.state)}<br/>Nigeria</p>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:0 0 8px;color:#f4f4f5;">Expected fulfillment: within <strong>${input.fulfillmentDays} days</strong> of payment confirmation.</p>
+    <p style="margin:0;color:#a1a1aa;font-size:14px;">We will email you when your order ships. Questions? Reply to hello@klarify.africa.</p>
+  `);
+
+  const text = [
+    `Hi ${firstName},`,
+    "",
+    "Your physical book pre-order is confirmed.",
+    "",
+    `Order ID: ${input.orderId}`,
+    `Book: ${input.bookTitle}`,
+    `Format: ${input.formatLabel}`,
+    `Quantity: ${input.quantity}`,
+    `Total: ${formatNgnEmail(input.totalKobo)}`,
+    "",
+    `Delivery: ${input.streetAddress}, ${input.city}, ${input.state}, Nigeria`,
+    "",
+    `Expected fulfillment within ${input.fulfillmentDays} days.`,
+  ].join("\n");
+
+  return { subject, html, text };
+}
+
+export function physicalPreorderAdminEmail(input: {
+  name: string;
+  email: string;
+  phone: string;
+  orderId: string;
+  paymentReference: string;
+  bookTitle: string;
+  formatLabel: string;
+  quantity: number;
+  totalKobo: number;
+  streetAddress: string;
+  city: string;
+  state: string;
+}) {
+  const subject = `[Physical Pre-Order] ${input.name} — ${input.bookTitle}`;
+
+  const html = layout(`
+    <h1 style="margin:0 0 12px;font-size:22px;line-height:1.3;color:#ffffff;">New paid physical pre-order</h1>
+    <p style="margin:0 0 24px;color:#a1a1aa;">A customer completed payment for a hard copy pre-order on <strong style="color:#f4f4f5;">book.klarify.africa</strong>.</p>
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom:24px;">
+      ${fieldRow("Order ID", input.orderId)}
+      ${fieldRow("Payment ref", input.paymentReference)}
+      ${fieldRow("Name", input.name)}
+      ${fieldRow("Email", input.email)}
+      ${fieldRow("Phone", input.phone)}
+      ${fieldRow("Book", input.bookTitle)}
+      ${fieldRow("Format", input.formatLabel)}
+      ${fieldRow("Quantity", String(input.quantity))}
+      ${fieldRow("Total paid", formatNgnEmail(input.totalKobo))}
+      ${fieldRow("Address", `${input.streetAddress}, ${input.city}, ${input.state}, Nigeria`)}
+    </table>
+    <p style="margin:0;color:#a1a1aa;font-size:13px;">Update fulfillment status in Supabase: book_physical_preorders.</p>
+  `);
+
+  const text = [
+    "New paid physical pre-order",
+    "",
+    `Order ID: ${input.orderId}`,
+    `Payment ref: ${input.paymentReference}`,
+    `Name: ${input.name}`,
+    `Email: ${input.email}`,
+    `Phone: ${input.phone}`,
+    `Book: ${input.bookTitle} (${input.formatLabel}) x${input.quantity}`,
+    `Total: ${formatNgnEmail(input.totalKobo)}`,
+    `Address: ${input.streetAddress}, ${input.city}, ${input.state}, Nigeria`,
+  ].join("\n");
+
+  return { subject, html, text };
+}

@@ -67,7 +67,7 @@ export function Author() {
             </motion.div>
 
             <FadeIn delay={0.2}>
-              <ReadOnlineLinks />
+              <ReadOnlineLinks location="author" />
             </FadeIn>
           </div>
         </div>

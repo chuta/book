@@ -169,7 +169,7 @@ export function Hero() {
             </div>
 
             <FadeIn delay={0.35} className="relative z-10 mt-8 max-w-md mx-auto lg:mx-0 lg:max-w-none">
-              <ReadOnlineLinks />
+              <ReadOnlineLinks location="hero" />
             </FadeIn>
           </FadeIn>
         </div>

@@ -1,10 +1,15 @@
 import { AUTHOR } from "@/lib/constants";
+import { PhysicalPreOrderCTA } from "@/components/commerce/PhysicalPreOrderCTA";
 
 interface ReadOnlineLinksProps {
   className?: string;
+  location?: string;
 }
 
-export function ReadOnlineLinks({ className = "" }: ReadOnlineLinksProps) {
+export function ReadOnlineLinks({
+  className = "",
+  location = "read-online",
+}: ReadOnlineLinksProps) {
   return (
     <div className={className}>
       <h3 className="text-sm font-medium uppercase tracking-widest text-emerald-400 mb-4">
@@ -47,6 +52,8 @@ export function ReadOnlineLinks({ className = "" }: ReadOnlineLinksProps) {
           </a>
         ))}
       </div>
+
+      <PhysicalPreOrderCTA location={location} />
     </div>
   );
 }

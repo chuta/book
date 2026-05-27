@@ -1,18 +1,22 @@
 import { initializeKorapayCharge, verifyKorapayCharge } from "@/lib/korapay/client";
+import { logWebhookEvent } from "@/lib/db/commerce";
 import {
-  createPendingOrder,
-  createPurchaseEntitlement,
-  ensureUserForEmail,
-  generateMagicLink,
-  getOrderByPaymentReference,
-  getProductById,
-  getProductBySlug,
-  logWebhookEvent,
-  updateOrderAfterVerification,
-} from "@/lib/db/commerce";
-import { isPhysicalPaymentReference } from "@/lib/db/physical-preorders";
-import { sendPurchaseSuccessEmail } from "@/lib/email/purchase";
-import { processPhysicalPreorderWebhook } from "@/lib/physical/checkout";
+  getPhysicalPreorderByPaymentReference,
+  isPhysicalPaymentReference,
+  markPhysicalPreorderEmailsSent,
+  markPhysicalPreorderFailed,
+  markPhysicalPreorderPaid,
+  createPendingPhysicalPreorder,
+} from "@/lib/db/physical-preorders";
+import { sendPhysicalPreorderEmails } from "@/lib/email/physical-preorder";
+import { AUTHOR } from "@/lib/constants";
+import {
+  calculatePhysicalOrderTotalKobo,
+  PHYSICAL_BOOK_FORMATS,
+  PHYSICAL_SHIP_COUNTRY,
+} from "@/lib/physical/constants";
+import type { PhysicalBookFormat } from "@/lib/physical/constants";
+import type { PhysicalPreorderRequest } from "@/lib/physical/types";
 
 function getSiteUrl(): string {
   return (
@@ -21,38 +25,58 @@ function getSiteUrl(): string {
   );
 }
 
-export async function startCheckout(input: {
-  productSlug: string;
-  email: string;
-  name?: string;
-}): Promise<{ checkoutUrl: string; reference: string }> {
-  const product = await getProductBySlug(input.productSlug);
-  if (!product) {
-    throw new Error("Product not found");
+function getBookTitle(slug: string): string | null {
+  const book = AUTHOR.books.find((item) => item.productSlug === slug);
+  return book?.title ?? null;
+}
+
+export async function startPhysicalPreorderCheckout(
+  input: PhysicalPreorderRequest
+): Promise<{ checkoutUrl: string; reference: string }> {
+  const bookTitle = getBookTitle(input.bookSlug);
+  if (!bookTitle) {
+    throw new Error("Book not found");
   }
 
-  const order = await createPendingOrder({
-    productId: product.id,
-    customerEmail: input.email,
+  if (!PHYSICAL_BOOK_FORMATS[input.format]) {
+    throw new Error("Invalid format");
+  }
+
+  const quantity = Math.min(Math.max(Math.floor(input.quantity), 1), 20);
+  const pricing = calculatePhysicalOrderTotalKobo(input.format, quantity);
+
+  const order = await createPendingPhysicalPreorder({
     customerName: input.name,
-    amountNgnKobo: product.price_ngn_kobo,
+    customerEmail: input.email,
+    customerPhone: input.phone,
+    bookSlug: input.bookSlug,
+    bookTitle,
+    format: input.format,
+    quantity,
+    unitPriceNgnKobo: pricing.unitPriceNgnKobo,
+    shippingNgnKobo: pricing.shippingNgnKobo,
+    totalNgnKobo: pricing.totalNgnKobo,
+    streetAddress: input.streetAddress,
+    city: input.city,
+    state: input.state,
+    country: PHYSICAL_SHIP_COUNTRY,
   });
 
   const siteUrl = getSiteUrl();
   const init = await initializeKorapayCharge({
-    amount: product.price_ngn_kobo,
+    amount: order.total_ngn_kobo,
     currency: "NGN",
     reference: order.payment_reference,
-    redirect_url: `${siteUrl}/checkout/success`,
+    redirect_url: `${siteUrl}/preorder/success`,
     notification_url: `${siteUrl}/api/webhooks/korapay`,
-    narration: product.title.slice(0, 120),
+    narration: `Physical book: ${bookTitle.slice(0, 80)}`,
     customer: {
       email: input.email,
       name: input.name,
     },
     metadata: {
-      order_id: order.id,
-      product_slug: product.slug,
+      order_type: "physical",
+      book_slug: input.bookSlug,
     },
     channels: ["bank_transfer", "card", "pay_with_bank"],
   });
@@ -63,16 +87,16 @@ export async function startCheckout(input: {
   };
 }
 
-export async function fulfillPaidOrder(
+export async function fulfillPaidPhysicalPreorder(
   paymentReference: string,
   korapayReference: string
 ): Promise<{ fulfilled: boolean; reason?: string }> {
-  const order = await getOrderByPaymentReference(paymentReference);
+  const order = await getPhysicalPreorderByPaymentReference(paymentReference);
   if (!order) {
     return { fulfilled: false, reason: "order_not_found" };
   }
 
-  if (order.status === "paid" && order.payment_verified) {
+  if (order.payment_status === "paid" && order.payment_verified) {
     return { fulfilled: false, reason: "already_fulfilled" };
   }
 
@@ -80,58 +104,36 @@ export async function fulfillPaidOrder(
   const charge = verification.data;
 
   if (!charge || charge.status !== "success") {
-    await updateOrderAfterVerification({
+    await markPhysicalPreorderFailed({
       orderId: order.id,
       korapayReference,
-      status: "failed",
     });
     return { fulfilled: false, reason: "payment_not_successful" };
   }
 
   const paidKobo = Math.round(parseFloat(charge.amount_paid || "0") * 100);
-  if (paidKobo < order.amount_ngn_kobo) {
-    await updateOrderAfterVerification({
+  if (paidKobo < order.total_ngn_kobo) {
+    await markPhysicalPreorderFailed({
       orderId: order.id,
       korapayReference,
-      status: "failed",
     });
     return { fulfilled: false, reason: "underpaid" };
   }
 
-  const { userId, isNewUser } = await ensureUserForEmail({
-    email: order.customer_email,
-    fullName: order.customer_name ?? undefined,
-  });
-
-  await updateOrderAfterVerification({
+  const paidOrder = await markPhysicalPreorderPaid({
     orderId: order.id,
     korapayReference,
-    status: "paid",
-    userId,
   });
 
-  const created = await createPurchaseEntitlement({
-    userId,
-    productId: order.product_id,
-    orderId: order.id,
-  });
-
-  if (created || isNewUser) {
-    const magicLink = await generateMagicLink(order.customer_email);
-    const product = await getProductById(order.product_id);
-
-    await sendPurchaseSuccessEmail({
-      email: order.customer_email,
-      name: order.customer_name,
-      productTitle: product?.title,
-      magicLink,
-    });
+  if (!paidOrder.confirmation_sent || !paidOrder.admin_notified) {
+    await sendPhysicalPreorderEmails(paidOrder);
+    await markPhysicalPreorderEmailsSent(paidOrder.id);
   }
 
   return { fulfilled: true };
 }
 
-export async function processKorapayWebhook(input: {
+export async function processPhysicalPreorderWebhook(input: {
   event: string;
   data: {
     reference?: string;
@@ -143,7 +145,7 @@ export async function processKorapayWebhook(input: {
     eventType: input.event,
     paymentReference:
       input.data.payment_reference ?? input.data.reference ?? undefined,
-    payload: input,
+    payload: { ...input, order_type: "physical" },
     status: "received",
   });
 
@@ -160,11 +162,6 @@ export async function processKorapayWebhook(input: {
 
   const merchantReference =
     input.data.payment_reference ?? input.data.reference;
-
-  if (merchantReference && isPhysicalPaymentReference(merchantReference)) {
-    return processPhysicalPreorderWebhook(input);
-  }
-
   const korapayReference = input.data.reference;
 
   if (!merchantReference || !korapayReference) {
@@ -178,7 +175,10 @@ export async function processKorapayWebhook(input: {
   }
 
   try {
-    const result = await fulfillPaidOrder(merchantReference, korapayReference);
+    const result = await fulfillPaidPhysicalPreorder(
+      merchantReference,
+      korapayReference
+    );
     await logWebhookEvent({
       eventType: input.event,
       paymentReference: merchantReference,
@@ -188,7 +188,8 @@ export async function processKorapayWebhook(input: {
     });
     return { ok: true };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "fulfillment_failed";
+    const message =
+      error instanceof Error ? error.message : "physical_fulfillment_failed";
     await logWebhookEvent({
       eventType: input.event,
       paymentReference: merchantReference,
@@ -200,22 +201,26 @@ export async function processKorapayWebhook(input: {
   }
 }
 
-export async function verifyCheckoutReturn(reference: string): Promise<{
+export async function verifyPhysicalPreorderReturn(reference: string): Promise<{
   status: "paid" | "pending" | "failed" | "unknown";
 }> {
-  const order = await getOrderByPaymentReference(reference);
+  if (!isPhysicalPaymentReference(reference)) {
+    return { status: "unknown" };
+  }
+
+  const order = await getPhysicalPreorderByPaymentReference(reference);
   if (!order) {
     return { status: "unknown" };
   }
 
-  if (order.status === "paid") {
+  if (order.payment_status === "paid") {
     return { status: "paid" };
   }
 
   try {
     const verification = await verifyKorapayCharge(reference);
     if (verification.data?.status === "success") {
-      await fulfillPaidOrder(reference, verification.data.reference);
+      await fulfillPaidPhysicalPreorder(reference, verification.data.reference);
       return { status: "paid" };
     }
     if (
@@ -228,4 +233,8 @@ export async function verifyCheckoutReturn(reference: string): Promise<{
   } catch {
     return { status: "pending" };
   }
+}
+
+export function isValidPhysicalFormat(value: string): value is PhysicalBookFormat {
+  return value === "hardback" || value === "softback";
 }
