@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { BOOK_PURCHASE, BOOK_PRODUCT_SLUGS } from "@/lib/constants";
 import { trackCTA } from "@/lib/analytics";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 
 type BookPurchaseLayout = "inline" | "stacked" | "cards";
 type BookPurchaseAlign = "left" | "center";
@@ -70,20 +71,10 @@ function PurchaseOption({
         </p>
         <p className="text-xs text-muted mt-0.5 leading-snug">{description}</p>
       </div>
-      <svg
+      <LandingIcon
+        name="arrow-top-right-on-square"
         className="h-4 w-4 shrink-0 text-muted group-hover:text-emerald-400 transition-colors"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        aria-hidden
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-        />
-      </svg>
+      />
     </motion.a>
   );
 }

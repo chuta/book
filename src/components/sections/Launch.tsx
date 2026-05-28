@@ -3,6 +3,7 @@
 import { LAUNCH_EVENT } from "@/lib/constants";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { RegistrationForm } from "@/components/ui/RegistrationForm";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 import { AnimatedSection } from "@/lib/animations";
 import { FadeIn } from "@/lib/animations";
 
@@ -23,17 +24,26 @@ export function Launch() {
             <div className="space-y-8">
               <div className="grid grid-cols-2 gap-4">
                 <div className="glass-card rounded-xl p-5">
-                  <p className="text-xs text-muted uppercase tracking-wider mb-1">Date</p>
+                  <div className="mb-2 flex items-center gap-2 text-emerald-400">
+                    <LandingIcon name="calendar-days" className="h-4 w-4" />
+                    <p className="text-xs text-muted uppercase tracking-wider">Date</p>
+                  </div>
                   <p className="font-semibold">{LAUNCH_EVENT.date}</p>
                 </div>
                 <div className="glass-card rounded-xl p-5">
-                  <p className="text-xs text-muted uppercase tracking-wider mb-1">Time</p>
+                  <div className="mb-2 flex items-center gap-2 text-emerald-400">
+                    <LandingIcon name="clock" className="h-4 w-4" />
+                    <p className="text-xs text-muted uppercase tracking-wider">Time</p>
+                  </div>
                   <p className="font-semibold">{LAUNCH_EVENT.time}</p>
                 </div>
               </div>
 
               <div className="glass-card rounded-xl p-5">
-                <p className="text-xs text-muted uppercase tracking-wider mb-1">Venue</p>
+                <div className="mb-2 flex items-center gap-2 text-emerald-400">
+                  <LandingIcon name="map-pin" className="h-4 w-4" />
+                  <p className="text-xs text-muted uppercase tracking-wider">Venue</p>
+                </div>
                 <p className="font-semibold">{LAUNCH_EVENT.venue}</p>
               </div>
 
@@ -42,7 +52,7 @@ export function Launch() {
                 <ul className="space-y-3">
                   {LAUNCH_EVENT.themes.map((theme) => (
                     <li key={theme} className="flex items-start gap-3 text-sm text-muted">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
+                      <LandingIcon name="check-circle" className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
                       {theme}
                     </li>
                   ))}

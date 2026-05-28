@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { TESTIMONIALS } from "@/lib/constants";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 import { AnimatedSection, fadeInUp, staggerContainer } from "@/lib/animations";
 
 export function SocialProof() {
@@ -27,7 +28,9 @@ export function SocialProof() {
               variants={fadeInUp}
               className="glass-card rounded-2xl p-8 flex flex-col"
             >
-              <div className="text-emerald-400 text-3xl mb-4">&ldquo;</div>
+              <div className="mb-4 text-emerald-400">
+                <LandingIcon name="chat-bubble-bottom-center-text" className="h-8 w-8" />
+              </div>
               <p className="text-muted leading-relaxed flex-1 mb-6">
                 {testimonial.quote}
               </p>

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/Button";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 import { SITE_LOGO, SITE_LOGO_ALT } from "@/lib/constants";
 
 const NAV_LINKS = [
@@ -69,13 +70,11 @@ export function Navbar() {
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            {mobileOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
+          {mobileOpen ? (
+            <LandingIcon name="x-mark" className="h-6 w-6" />
+          ) : (
+            <LandingIcon name="bars-3" className="h-6 w-6" />
+          )}
         </button>
       </nav>
 

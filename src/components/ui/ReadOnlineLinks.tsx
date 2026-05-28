@@ -1,5 +1,6 @@
 import { AUTHOR } from "@/lib/constants";
 import { PhysicalPreOrderCTA } from "@/components/commerce/PhysicalPreOrderCTA";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 
 interface ReadOnlineLinksProps {
   className?: string;
@@ -34,20 +35,7 @@ export function ReadOnlineLinks({
             </div>
             <span className="shrink-0 inline-flex items-center gap-2 text-sm font-medium text-emerald-400">
               Read Online
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                />
-              </svg>
+              <LandingIcon name="arrow-top-right-on-square" className="h-4 w-4" />
             </span>
           </a>
         ))}

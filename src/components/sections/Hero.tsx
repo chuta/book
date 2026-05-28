@@ -8,6 +8,7 @@ import { BookPurchaseCTA } from "@/components/ui/BookPurchaseCTA";
 import { ReadOnlineLinks } from "@/components/ui/ReadOnlineLinks";
 import { HERO_HEADLINES, LAUNCH_EVENT, SITE_LOGO, SITE_LOGO_ALT } from "@/lib/constants";
 import { FadeIn } from "@/lib/animations";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 
 export function Hero() {
   const [headlineIndex, setHeadlineIndex] = useState(0);
@@ -30,7 +31,7 @@ export function Hero() {
           <div className="space-y-8">
             <FadeIn>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <LandingIcon name="calendar-days" className="h-4 w-4 text-emerald-400" />
                 <span className="text-sm text-emerald-400 font-medium">
                   Virtual Launch · {LAUNCH_EVENT.date} · {LAUNCH_EVENT.time}
                 </span>
@@ -128,7 +129,7 @@ export function Hero() {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center">
-                    <span className="text-emerald-400 text-lg">✓</span>
+                    <LandingIcon name="check" className="h-5 w-5 text-emerald-400" />
                   </div>
                   <div>
                     <p className="text-xs text-muted">Readiness Score</p>
@@ -144,7 +145,7 @@ export function Hero() {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-gold/20 flex items-center justify-center">
-                    <span className="text-gold text-lg">📋</span>
+                    <LandingIcon name="clipboard-document" className="h-5 w-5 text-gold" />
                   </div>
                   <div>
                     <p className="text-xs text-muted">Classification</p>

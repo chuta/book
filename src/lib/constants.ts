@@ -1,3 +1,5 @@
+import type { LandingIconName } from "@/lib/icon-names";
+
 export const SITE_URL = "https://book.klarify.africa";
 
 export const SITE_LOGO = "/images/fgb.png";
@@ -37,49 +39,53 @@ export const BOOK_PURCHASE_URL = BOOK_PURCHASE.international.url;
 export const SITE_NAME = "The Founder's Guide to Building in Regulated Markets";
 
 export const HERO_HEADLINES = [
-  "Building in Regulated Markets Starts Here.",
-  "Regulatory Intelligence for Africa's Next Builders.",
+  "Building in Regulated Markets Starts Here, Nigeria first...",
+  "Regulatory Readiness Intelligence-OS for Africa's Next Builders.",
   "Trust-Ready Innovation Starts with the Right Framework.",
 ];
 
-export const PAIN_POINTS = [
+export const PAIN_POINTS: {
+  icon: LandingIconName;
+  title: string;
+  description: string;
+}[] = [
   {
-    icon: "📩",
+    icon: "envelope",
     title: "Unexpected Regulator Letters",
     description: "Surprise inquiries that halt product launches overnight.",
   },
   {
-    icon: "🏦",
+    icon: "building-library",
     title: "Banking Relationship Loss",
     description: "De-risking decisions that cut off essential financial rails.",
   },
   {
-    icon: "📋",
+    icon: "clipboard-document",
     title: "Licensing Confusion",
     description: "Unclear pathways between innovation and authorization.",
   },
   {
-    icon: "🔀",
+    icon: "arrows-right-left",
     title: "Multi-Regulator Complexity",
     description: "Navigating overlapping mandates across jurisdictions.",
   },
   {
-    icon: "👁️",
+    icon: "eye-slash",
     title: "Compliance Blindspots",
     description: "Gaps that only surface during due diligence or audits.",
   },
   {
-    icon: "🌍",
+    icon: "globe-alt",
     title: "Expansion Uncertainty",
     description: "Cross-border growth without regulatory clarity.",
   },
   {
-    icon: "🔍",
+    icon: "magnifying-glass",
     title: "AML/CFT Confusion",
     description: "Anti-money laundering requirements that evolve faster than teams.",
   },
   {
-    icon: "🤝",
+    icon: "user-group",
     title: "Institutional Trust Issues",
     description: "Partners and investors requiring proof of regulatory readiness.",
   },
@@ -98,86 +104,103 @@ export const BOOK_TOPICS = [
   { title: "Institutional Navigation", description: "Engaging banks, regulators, and policy stakeholders" },
 ];
 
-export const PERSONAS = [
+export const PERSONAS: {
+  icon: LandingIconName;
+  title: string;
+  description: string;
+}[] = [
   {
-    icon: "🚀",
+    icon: "rocket-launch",
     title: "Founders",
     description: "Building blockchain, fintech, and digital asset products in regulated environments.",
   },
   {
-    icon: "⚖️",
+    icon: "scale",
     title: "Compliance Teams",
     description: "Translating regulatory requirements into operational frameworks.",
   },
   {
-    icon: "💼",
+    icon: "briefcase",
     title: "Investors",
     description: "Evaluating regulatory risk and institutional readiness in portfolio companies.",
   },
   {
-    icon: "🏛️",
+    icon: "building-office-2",
     title: "Regulators",
     description: "Understanding innovation patterns and industry compliance approaches.",
   },
   {
-    icon: "🏦",
+    icon: "building-office",
     title: "Banks",
     description: "Assessing fintech and digital asset partner risk profiles.",
   },
   {
-    icon: "📜",
+    icon: "document-text",
     title: "Law Firms",
     description: "Advising clients on regulatory strategy and licensing pathways.",
   },
   {
-    icon: "💡",
+    icon: "light-bulb",
     title: "Innovation Teams",
     description: "Corporate teams exploring regulated digital product launches.",
   },
   {
-    icon: "📊",
+    icon: "chart-bar",
     title: "Fintech Operators",
     description: "Scaling payment, lending, and digital asset operations compliantly.",
   },
 ];
 
-export const KLARIFY_FEATURES = [
+export const KLARIFY_FEATURES: {
+  icon: LandingIconName;
+  title: string;
+  description: string;
+  metric: string;
+}[] = [
   {
+    icon: "signal",
     title: "Readiness Score",
     description: "Quantified regulatory readiness across your product and operations.",
     metric: "87/100",
   },
   {
+    icon: "tag",
     title: "Product Classification",
     description: "Automated regulatory treatment analysis for digital products.",
     metric: "VASP",
   },
   {
+    icon: "map",
     title: "Regulator Mapping",
     description: "Identify relevant regulators and their mandates for your product.",
     metric: "4 bodies",
   },
   {
+    icon: "list-bullet",
     title: "Compliance Roadmaps",
     description: "Step-by-step pathways from current state to full authorization.",
     metric: "12 steps",
   },
   {
+    icon: "bolt",
     title: "Regulatory Intelligence",
     description: "Real-time updates on policy changes affecting your sector.",
     metric: "Live",
   },
   {
+    icon: "shield-check",
     title: "Trust Infrastructure",
     description: "Documentation and evidence systems for institutional partners.",
     metric: "Active",
   },
   {
+    icon: "chat-bubble-left-right",
     title: "Regulator Engagement",
     description: "Structured intelligence for productive regulator interactions.",
     metric: "Ready",
   },
   {
+    icon: "users",
     title: "Vetted Specialist Network",
     description:
       "When a question needs a qualified human,Untitled a vetted regulatory specialist.",

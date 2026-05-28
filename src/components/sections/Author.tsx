@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { AUTHOR } from "@/lib/constants";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { ReadOnlineLinks } from "@/components/ui/ReadOnlineLinks";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 import { AnimatedSection, fadeInUp } from "@/lib/animations";
 import { FadeIn } from "@/lib/animations";
 
@@ -60,7 +61,7 @@ export function Author() {
                   key={credential}
                   className="flex items-start gap-3 glass-card rounded-xl px-4 py-3"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 mt-2" />
+                  <LandingIcon name="check-circle" className="h-4 w-4 shrink-0 mt-0.5 text-emerald-400" />
                   <span className="text-sm text-muted leading-snug">{credential}</span>
                 </div>
               ))}

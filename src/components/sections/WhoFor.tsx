@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { PERSONAS } from "@/lib/constants";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 import { AnimatedSection, fadeInUp, staggerContainer } from "@/lib/animations";
 
 export function WhoFor() {
@@ -28,8 +29,8 @@ export function WhoFor() {
               variants={fadeInUp}
               className="glass-card glass-card-hover rounded-2xl p-6 text-center group"
             >
-              <div className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                {persona.icon}
+              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+                <LandingIcon name={persona.icon} className="h-6 w-6" />
               </div>
               <h3 className="font-semibold text-foreground mb-2">
                 {persona.title}

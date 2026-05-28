@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { KLARIFY_FEATURES } from "@/lib/constants";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { Button } from "@/components/ui/Button";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 import { AnimatedSection, fadeInUp, staggerContainer } from "@/lib/animations";
 import { FadeIn } from "@/lib/animations";
 
@@ -36,6 +37,9 @@ export function Klarify() {
             >
               <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/5 rounded-full -translate-y-1/2 translate-x-1/2 group-hover:bg-emerald-500/10 transition-colors" />
               <div className="relative">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400">
+                  <LandingIcon name={feature.icon} className="h-5 w-5" />
+                </div>
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-foreground text-sm">
                     {feature.title}
@@ -75,20 +79,7 @@ export function Klarify() {
                   className="inline-flex"
                 >
                   Explore the Product Tour
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                    />
-                  </svg>
+                  <LandingIcon name="arrow-top-right-on-square" className="h-4 w-4" />
                 </Button>
               </div>
             </div>

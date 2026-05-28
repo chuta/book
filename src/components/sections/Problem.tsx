@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { PAIN_POINTS } from "@/lib/constants";
 import { SectionHeader } from "@/components/ui/SectionHeader";
+import { LandingIcon } from "@/components/ui/LandingIcon";
 import { AnimatedSection, fadeInUp, staggerContainer } from "@/lib/animations";
 
 export function Problem() {
@@ -31,8 +32,8 @@ export function Problem() {
               variants={fadeInUp}
               className="glass-card glass-card-hover rounded-2xl p-6 group"
             >
-              <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">
-                {point.icon}
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-400 group-hover:scale-110 transition-transform duration-300">
+                <LandingIcon name={point.icon} className="h-6 w-6" />
               </div>
               <h3 className="font-semibold text-foreground mb-2 text-sm md:text-base">
                 {point.title}
