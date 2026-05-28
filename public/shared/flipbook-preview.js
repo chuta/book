@@ -8,6 +8,9 @@
   var lastBlockedAt = 0;
   var nudgeDismissed = false;
   var nudgeStartPage = 1;
+  var originalGotoPageFun = null;
+  var isSnapping = false;
+  var beforeFlipHooked = false;
 
   var nudgeStorageKey =
     "klarify_flip_nudge_" +
@@ -168,6 +171,10 @@
   }
 
   function getCurrentPage() {
+    if (typeof BookInfo !== "undefined" && BookInfo.getCurrentPageIndex) {
+      var fromBook = parseInt(BookInfo.getCurrentPageIndex(), 10);
+      if (fromBook) return fromBook;
+    }
     if (typeof currentPageIndex !== "undefined" && currentPageIndex) {
       return parseInt(currentPageIndex, 10) || 1;
     }
@@ -177,37 +184,132 @@
     return 1;
   }
 
-  function blockIfBeyond(page) {
-    if (!page || page <= maxPage) return false;
+  function safeEndFlip() {
+    try {
+      var book =
+        typeof BookInfo !== "undefined" && BookInfo.getBook && BookInfo.getBook();
+      if (!book) return;
+
+      if (book.flipAnimation && typeof book.flipAnimation.stop === "function") {
+        book.flipAnimation.stop();
+      }
+      if (book.flipPageManager && typeof book.flipPageManager.endFlip === "function") {
+        book.flipPageManager.endFlip();
+      }
+      if (typeof book.endFlip === "function") {
+        book.endFlip();
+      }
+      if (book.flipIntervalManager && book.flipIntervalManager.flipInterval) {
+        book.flipIntervalManager.flipInterval.stop = true;
+        book.flipIntervalManager.flipInterval = undefined;
+      }
+    } catch (e) {}
+  }
+
+  function snapToMaxPage() {
+    if (isSnapping || !originalGotoPageFun) return;
+    isSnapping = true;
+
+    setTimeout(function () {
+      try {
+        safeEndFlip();
+        var current = getCurrentPage();
+        if (current > maxPage) {
+          originalGotoPageFun(maxPage, false, "klarify-preview-snap");
+        } else if (typeof BookInfo !== "undefined" && BookInfo.getBook) {
+          var book = BookInfo.getBook();
+          if (book && book.flipping) {
+            originalGotoPageFun(maxPage, false, "klarify-preview-reset");
+          } else if (
+            book &&
+            book.currentPageIndex === maxPage &&
+            typeof book.currentOffset === "number" &&
+            typeof book.totalOffset === "number" &&
+            Math.abs(book.currentOffset - book.totalOffset) > 1
+          ) {
+            originalGotoPageFun(maxPage, false, "klarify-preview-reset");
+          }
+        }
+      } finally {
+        isSnapping = false;
+      }
+    }, 0);
+  }
+
+  function handleBlockedNavigation(page) {
+    var target = parseInt(page, 10) || 1;
+    if (!target || target <= maxPage) return false;
+
+    safeEndFlip();
+
     var now = Date.now();
     if (now - lastBlockedAt > 800) {
       lastBlockedAt = now;
       showOverlay();
-      if (typeof gotoPageFun === "function") {
-        gotoPageFun(maxPage, false, "0");
-      }
     }
+
+    snapToMaxPage();
     return true;
+  }
+
+  function installBeforeFlipHook() {
+    if (
+      beforeFlipHooked ||
+      typeof BookEvent === "undefined" ||
+      !BookEvent.bindEvent
+    ) {
+      return;
+    }
+
+    BookEvent.bindEvent("beforeFlipPage", function (page) {
+      if (handleBlockedNavigation(page)) {
+        return true;
+      }
+    });
+    beforeFlipHooked = true;
+  }
+
+  function wrapNavigation(fnName) {
+    var original = window[fnName];
+    if (typeof original !== "function" || original.__klarifyWrapped) return;
+
+    window[fnName] = function () {
+      if (fnName === "nextPageFun" || fnName === "lastPageFun") {
+        if (getCurrentPage() >= maxPage) {
+          handleBlockedNavigation(maxPage + 1);
+          return;
+        }
+      }
+      return original.apply(this, arguments);
+    };
+    window[fnName].__klarifyWrapped = true;
   }
 
   function installHooks() {
     if (typeof gotoPageFun === "function" && !gotoPageFun.__klarifyWrapped) {
-      var original = gotoPageFun;
+      originalGotoPageFun = gotoPageFun;
       gotoPageFun = function (page) {
         var target = parseInt(page, 10) || 1;
-        if (target > maxPage) {
-          blockIfBeyond(target);
+        if (handleBlockedNavigation(target)) {
           return;
         }
-        var result = original.apply(this, arguments);
+        var result = originalGotoPageFun.apply(this, arguments);
         maybeDismissNudgeOnPageChange();
         return result;
       };
       gotoPageFun.__klarifyWrapped = true;
     }
 
-    blockIfBeyond(getCurrentPage());
-    maybeDismissNudgeOnPageChange();
+    installBeforeFlipHook();
+    wrapNavigation("nextPageFun");
+    wrapNavigation("lastPageFun");
+
+    var current = getCurrentPage();
+    if (current > maxPage) {
+      snapToMaxPage();
+    } else {
+      maybeDismissNudgeOnPageChange();
+    }
   }
 
   var attempts = 0;
