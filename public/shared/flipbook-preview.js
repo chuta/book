@@ -3,10 +3,147 @@
   var purchaseUrl =
     window.__KLARIFY_PURCHASE_URL__ || "https://book.klarify.africa/checkout/founders-guide";
   var overlayId = "klarify-preview-gate";
+  var nudgeId = "klarify-read-nudge";
+  var nudgeStylesId = "klarify-read-nudge-styles";
   var lastBlockedAt = 0;
+  var nudgeDismissed = false;
+  var nudgeStartPage = 1;
+
+  var nudgeStorageKey =
+    "klarify_flip_nudge_" +
+    (location.pathname.split("/").filter(Boolean)[0] || "book");
+
+  function isTouchDevice() {
+    return (
+      window.matchMedia("(pointer: coarse)").matches ||
+      "ontouchstart" in window ||
+      navigator.maxTouchPoints > 0
+    );
+  }
+
+  function injectNudgeStyles() {
+    if (document.getElementById(nudgeStylesId)) return;
+
+    var style = document.createElement("style");
+    style.id = nudgeStylesId;
+    style.textContent =
+      "@keyframes klarifyNudgePulse{0%,100%{opacity:.45;transform:translateX(0)}50%{opacity:1;transform:translateX(4px)}}" +
+      "@keyframes klarifyNudgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}" +
+      "#" +
+      nudgeId +
+      "{animation:klarifyNudgeFloat 2.4s ease-in-out infinite}" +
+      "#" +
+      nudgeId +
+      " .klarify-nudge-arrow{animation:klarifyNudgePulse 1.4s ease-in-out infinite}";
+    document.head.appendChild(style);
+  }
+
+  function dismissReadNudge(persist) {
+    if (nudgeDismissed) return;
+    nudgeDismissed = true;
+    if (persist !== false) {
+      try {
+        sessionStorage.setItem(nudgeStorageKey, "1");
+      } catch (e) {}
+    }
+    var nudge = document.getElementById(nudgeId);
+    if (nudge) {
+      nudge.style.opacity = "0";
+      nudge.style.transform = "translate(-50%, 12px)";
+      nudge.style.transition = "opacity .25s ease, transform .25s ease";
+      setTimeout(function () {
+        if (nudge.parentNode) nudge.parentNode.removeChild(nudge);
+      }, 260);
+    }
+  }
+
+  function showReadNudge() {
+    if (nudgeDismissed || document.getElementById(nudgeId)) return;
+
+    try {
+      if (sessionStorage.getItem(nudgeStorageKey) === "1") {
+        nudgeDismissed = true;
+        return;
+      }
+    } catch (e) {}
+
+    injectNudgeStyles();
+
+    var touch = isTouchDevice();
+    var actionText = touch
+      ? "Swipe left or right to turn pages"
+      : "Click or drag the page edges to flip";
+    var hintText =
+      "Free preview · table of contents, foreword, preface & introduction";
+
+    var nudge = document.createElement("div");
+    nudge.id = nudgeId;
+    nudge.setAttribute("role", "status");
+    nudge.setAttribute("aria-live", "polite");
+    nudge.style.cssText =
+      "position:fixed;left:50%;bottom:max(20px, env(safe-area-inset-bottom));transform:translateX(-50%);z-index:99998;" +
+      "max-width:min(92vw, 420px);width:calc(100% - 32px);background:rgba(12,12,18,0.96);" +
+      "border:1px solid rgba(16,185,129,0.28);border-radius:16px;padding:14px 16px;" +
+      "box-shadow:0 18px 50px rgba(0,0,0,0.45);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;" +
+      "color:#f4f4f5;transition:opacity .25s ease, transform .25s ease;";
+
+    nudge.innerHTML =
+      '<div style="display:flex;align-items:flex-start;gap:12px;">' +
+      '<div style="flex-shrink:0;width:40px;height:40px;border-radius:12px;background:rgba(16,185,129,0.12);display:flex;align-items:center;justify-content:center;color:#10b981;">' +
+      (touch
+        ? '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 8l-4 4 4 4"/><path d="M17 8l4 4-4 4"/><path d="M3 12h18"/></svg>'
+        : '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h16"/></svg>') +
+      "</div>" +
+      '<div style="min-width:0;flex:1;">' +
+      '<p style="margin:0 0 4px;font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:#10b981;">Preview mode</p>' +
+      '<p style="margin:0 0 4px;font-size:15px;font-weight:600;line-height:1.35;">' +
+      actionText +
+      "</p>" +
+      '<p style="margin:0;font-size:12px;line-height:1.45;color:#a1a1aa;">' +
+      hintText +
+      "</p>" +
+      "</div>" +
+      '<button type="button" id="klarify-read-nudge-close" aria-label="Dismiss reading hint" style="flex-shrink:0;background:none;border:none;color:#a1a1aa;font-size:20px;line-height:1;padding:0;cursor:pointer;">×</button>' +
+      "</div>" +
+      (touch
+        ? '<div style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;color:#10b981;font-size:12px;font-weight:500;">' +
+          '<span class="klarify-nudge-arrow">←</span> Swipe to read <span class="klarify-nudge-arrow">→</span>' +
+          "</div>"
+        : "");
+
+    document.body.appendChild(nudge);
+
+    document.getElementById("klarify-read-nudge-close").onclick = function () {
+      dismissReadNudge(true);
+    };
+
+    nudgeStartPage = getCurrentPage();
+
+    document.addEventListener(
+      "touchstart",
+      function onTouch() {
+        dismissReadNudge(true);
+        document.removeEventListener("touchstart", onTouch, true);
+      },
+      true
+    );
+
+    setTimeout(function () {
+      if (!nudgeDismissed) dismissReadNudge(true);
+    }, 12000);
+  }
+
+  function maybeDismissNudgeOnPageChange() {
+    if (nudgeDismissed) return;
+    var current = getCurrentPage();
+    if (current !== nudgeStartPage) {
+      dismissReadNudge(true);
+    }
+  }
 
   function showOverlay() {
     if (document.getElementById(overlayId)) return;
+    dismissReadNudge(true);
 
     var overlay = document.createElement("div");
     overlay.id = overlayId;
@@ -62,18 +199,28 @@
           blockIfBeyond(target);
           return;
         }
-        return original.apply(this, arguments);
+        var result = original.apply(this, arguments);
+        maybeDismissNudgeOnPageChange();
+        return result;
       };
       gotoPageFun.__klarifyWrapped = true;
     }
 
     blockIfBeyond(getCurrentPage());
+    maybeDismissNudgeOnPageChange();
   }
 
   var attempts = 0;
+  var nudgeShown = false;
   var timer = setInterval(function () {
     attempts += 1;
     installHooks();
+
+    if (!nudgeShown && attempts >= 4) {
+      nudgeShown = true;
+      setTimeout(showReadNudge, 800);
+    }
+
     if (attempts > 120) clearInterval(timer);
   }, 500);
 })();
