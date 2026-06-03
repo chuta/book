@@ -93,7 +93,7 @@ export function Hero() {
                   ))}
                 </div>
                 <p className="text-sm text-muted">
-                  Join founders, compliance teams, Lawyers, and institutions for theWebinar
+                  Join founders, compliance teams, Lawyers, and institutions for the Webinar
                 </p>
               </div>
             </FadeIn>

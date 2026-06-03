@@ -14,9 +14,9 @@ export function Launch() {
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-8">
         <SectionHeader
-          label="Virtual Launch"
+          label="Webinar"
           title={LAUNCH_EVENT.title}
-          description="Join founders, compliance leaders, and institutional partners for the official launch event."
+          description="Join founders, compliance leaders, lawyers, and institutional partners for the webinar."
         />
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
