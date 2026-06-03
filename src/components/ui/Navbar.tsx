@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { label: "Audience", href: "#audience" },
   { label: "Klarify", href: "#klarify" },
   { label: "Author", href: "#author" },
-  { label: "Launch", href: "#launch" },
+  { label: "Webinar", href: "#launch" },
 ];
 
 export function Navbar() {

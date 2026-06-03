@@ -34,8 +34,8 @@ function getUpcomingFollowUps(): FollowUpSchedule[] {
     ...item,
     subject:
       item.key === "followup-1d"
-        ? `Tomorrow: Virtual Launch — ${LAUNCH_EVENT.date}`
-        : `One week to go — Virtual Launch on ${LAUNCH_EVENT.date}`,
+        ? `Tomorrow: Webinar — ${LAUNCH_EVENT.date}`
+        : `One week to go — Webinar on ${LAUNCH_EVENT.date}`,
   }));
 }
 

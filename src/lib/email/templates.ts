@@ -74,6 +74,28 @@ function purchaseLinksHtml(): string {
   <p style="margin:0;"><a href="${BOOK_PURCHASE.international.url}" style="color:#10b981;text-decoration:none;">Buy Internationally (USD)</a></p>`;
 }
 
+function launchJoinLinkHtml(options?: { prominent?: boolean }): string {
+  const url = LAUNCH_EVENT.joinUrl;
+  if (!url) return "";
+
+  if (options?.prominent) {
+    return `<table role="presentation" cellspacing="0" cellpadding="0" style="margin:0 0 24px;">
+      <tr>
+        <td style="border-radius:10px;background:#10b981;">
+          <a href="${url}" style="display:inline-block;padding:12px 20px;color:#041008;font-size:15px;font-weight:600;text-decoration:none;">Join the webinar</a>
+        </td>
+      </tr>
+    </table>
+    <p style="margin:0 0 24px;color:#a1a1aa;font-size:14px;">Or copy this link: <a href="${url}" style="color:#10b981;text-decoration:none;">${escapeHtml(url)}</a></p>`;
+  }
+
+  return `<p style="margin:0;color:#a1a1aa;font-size:14px;">Join link: <a href="${url}" style="color:#10b981;text-decoration:none;">${escapeHtml(url)}</a></p>`;
+}
+
+function launchJoinLinkText(): string {
+  return LAUNCH_EVENT.joinUrl ? `Join link: ${LAUNCH_EVENT.joinUrl}` : "";
+}
+
 export function adminNotificationEmail(data: RegistrationPayload, registrationId: string) {
   const label = REGISTRATION_LABELS[data.type];
   const subject = `[Book Landing] New ${label}: ${data.name}`;
@@ -123,7 +145,7 @@ export function userConfirmationEmail(data: RegistrationPayload) {
             <p style="margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#10b981;">Event details</p>
             <p style="margin:0 0 6px;color:#ffffff;font-size:16px;font-weight:600;">${escapeHtml(LAUNCH_EVENT.date)}</p>
             <p style="margin:0 0 6px;color:#f4f4f5;">${escapeHtml(LAUNCH_EVENT.time)} · ${escapeHtml(LAUNCH_EVENT.venue)}</p>
-            <p style="margin:0;color:#a1a1aa;font-size:14px;">We'll send joining details closer to the date.</p>
+            ${launchJoinLinkHtml()}
           </td>
         </tr>
       </table>
@@ -135,19 +157,21 @@ export function userConfirmationEmail(data: RegistrationPayload) {
     const text = [
       `Hi ${firstName},`,
       "",
-      `You're registered for the virtual launch of ${SITE_NAME}.`,
+      `You're registered for the Webinar: ${SITE_NAME}.`,
       "",
       `Date: ${LAUNCH_EVENT.date}`,
       `Time: ${LAUNCH_EVENT.time}`,
       `Venue: ${LAUNCH_EVENT.venue}`,
       "",
-      "We'll send joining details closer to the date.",
+      launchJoinLinkText(),
       "",
       `Nigeria: ${BOOK_PURCHASE.nigeria.url}`,
       `International: ${BOOK_PURCHASE.international.url}`,
       "",
       "Questions? hello@klarify.africa",
-    ].join("\n");
+    ]
+      .filter(Boolean)
+      .join("\n");
 
     return { subject, html, text };
   }
@@ -178,16 +202,16 @@ export function launchFollowUpEmail(data: RegistrationPayload, variant: "followu
   const isFinal = variant === "followup-1d";
 
   const subject = isFinal
-    ? `Tomorrow: Virtual Launch — ${LAUNCH_EVENT.date}`
-    : `One week to go — Virtual Launch on ${LAUNCH_EVENT.date}`;
+    ? `Tomorrow: Webinar — ${LAUNCH_EVENT.date}`
+    : `One week to go — Webinar on ${LAUNCH_EVENT.date}`;
 
   const headline = isFinal
-    ? `${escapeHtml(firstName)}, the launch is tomorrow.`
-    : `${escapeHtml(firstName)}, one week until the launch.`;
+    ? `${escapeHtml(firstName)}, the webinar is tomorrow.`
+    : `${escapeHtml(firstName)}, one week until the webinar.`;
 
   const bodyCopy = isFinal
-    ? "This is your final reminder for the virtual launch. We'll share the joining link shortly — keep an eye on your inbox."
-    : "The virtual launch is one week away. Mark your calendar and get ready for a conversation on regulatory readiness across African markets.";
+    ? "This is your final reminder. Use the link below to join on Jitsi at the scheduled time."
+    : "The webinar is one week away. Save the date and bookmark your join link below.";
 
   const html = layout(`
     <h1 style="margin:0 0 12px;font-size:24px;line-height:1.3;color:#ffffff;">${headline}</h1>
@@ -195,9 +219,10 @@ export function launchFollowUpEmail(data: RegistrationPayload, variant: "followu
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;margin-bottom:24px;">
       <tr>
         <td style="padding:20px;">
-          <p style="margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#10b981;">Virtual launch</p>
+          <p style="margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;color:#10b981;">Webinar</p>
           <p style="margin:0 0 6px;color:#ffffff;font-size:16px;font-weight:600;">${escapeHtml(LAUNCH_EVENT.date)}</p>
-          <p style="margin:0;color:#f4f4f5;">${escapeHtml(LAUNCH_EVENT.time)} · ${escapeHtml(LAUNCH_EVENT.venue)}</p>
+          <p style="margin:0 0 12px;color:#f4f4f5;">${escapeHtml(LAUNCH_EVENT.time)} · ${escapeHtml(LAUNCH_EVENT.venue)}</p>
+          ${launchJoinLinkHtml({ prominent: isFinal })}
         </td>
       </tr>
     </table>
@@ -211,9 +236,13 @@ export function launchFollowUpEmail(data: RegistrationPayload, variant: "followu
     "",
     `${LAUNCH_EVENT.date} · ${LAUNCH_EVENT.time} · ${LAUNCH_EVENT.venue}`,
     "",
+    launchJoinLinkText(),
+    "",
     `Nigeria: ${BOOK_PURCHASE.nigeria.url}`,
     `International: ${BOOK_PURCHASE.international.url}`,
-  ].join("\n");
+  ]
+    .filter(Boolean)
+    .join("\n");
 
   return { subject, html, text };
 }

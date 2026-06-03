@@ -254,6 +254,11 @@ export const LAUNCH_EVENT = {
   date: "Friday, June 12, 2026",
   time: "4:00 PM WAT",
   venue: "Virtual Event",
+  /** Public join link sent in reminder emails (short URL) */
+  joinUrl: "https://bit.ly/4vkusa2",
+  /** Original Jitsi room URL */
+  joinUrlOriginal:
+    "https://meet.jit.si/moderated/bcac674a6387340205641ed303ab9c040a603c82724658fcca1aa11c7598d78b",
   /** ISO 8601 — 4:00 PM WAT (UTC+1) */
   datetimeIso: "2026-06-12T15:00:00.000Z",
   themes: [
