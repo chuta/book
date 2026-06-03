@@ -33,7 +33,7 @@ export function Hero() {
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5">
                 <LandingIcon name="calendar-days" className="h-4 w-4 text-emerald-400" />
                 <span className="text-sm text-emerald-400 font-medium">
-                  Virtual Launch · {LAUNCH_EVENT.date} · {LAUNCH_EVENT.time}
+                  Webinar · {LAUNCH_EVENT.date} · {LAUNCH_EVENT.time}
                 </span>
               </div>
             </FadeIn>
@@ -76,7 +76,7 @@ export function Hero() {
                   trackingLocation="hero"
                   className="w-full sm:w-auto"
                 >
-                  Register for Virtual Launch
+                  Register for Webinar
                 </Button>
                 <BookPurchaseCTA location="hero" layout="cards" align="left" />
               </div>
@@ -93,7 +93,7 @@ export function Hero() {
                   ))}
                 </div>
                 <p className="text-sm text-muted">
-                  Join founders, compliance teams, and institutions preparing for launch
+                  Join founders, compliance teams, Lawyers, and institutions for theWebinar
                 </p>
               </div>
             </FadeIn>

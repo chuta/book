@@ -250,7 +250,7 @@ export const AUTHOR = {
 };
 
 export const LAUNCH_EVENT = {
-  title: "Virtual Launch: The Founder's Guide to Building in Regulated Markets",
+  title: "Webinar: Building in Regulated Markets: What African Founders Aren't Being Told",
   date: "Friday, June 12, 2026",
   time: "4:00 PM WAT",
   venue: "Virtual Event",
