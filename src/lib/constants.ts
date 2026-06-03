@@ -2,6 +2,9 @@ import type { LandingIconName } from "@/lib/icon-names";
 
 export const SITE_URL = "https://book.klarify.africa";
 
+/** Flipbook preview — The Founder's Guide */
+export const READ_ONLINE_FOUNDERS_URL = `${SITE_URL}/founders/`;
+
 export const SITE_LOGO = "/images/fgb.png";
 export const SITE_LOGO_ALT = "Founder's Guide Book Launch";
 

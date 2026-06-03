@@ -2,6 +2,7 @@ import {
   BOOK_PURCHASE,
   KLARIFY_LOGO_URL,
   LAUNCH_EVENT,
+  READ_ONLINE_FOUNDERS_URL,
   SITE_NAME,
   SITE_URL,
 } from "@/lib/constants";
@@ -72,6 +73,15 @@ function purchaseLinksHtml(): string {
   return `<p style="margin:24px 0 8px;font-size:14px;color:#a1a1aa;">Get the book:</p>
   <p style="margin:0 0 8px;"><a href="${BOOK_PURCHASE.nigeria.url}" style="color:#10b981;text-decoration:none;">Buy in Nigeria (Naira)</a></p>
   <p style="margin:0;"><a href="${BOOK_PURCHASE.international.url}" style="color:#10b981;text-decoration:none;">Buy Internationally (USD)</a></p>`;
+}
+
+function readOnlineLinkHtml(): string {
+  return `<p style="margin:0 0 8px;font-size:14px;color:#a1a1aa;">Read a free preview online:</p>
+  <p style="margin:0 0 24px;"><a href="${READ_ONLINE_FOUNDERS_URL}" style="color:#10b981;text-decoration:none;">Read the book online</a></p>`;
+}
+
+function readOnlineLinkText(): string {
+  return `Read the book online: ${READ_ONLINE_FOUNDERS_URL}`;
 }
 
 function launchJoinLinkHtml(options?: { prominent?: boolean }): string {
@@ -149,6 +159,7 @@ export function userConfirmationEmail(data: RegistrationPayload) {
           </td>
         </tr>
       </table>
+      ${readOnlineLinkHtml()}
       <p style="margin:0 0 8px;color:#f4f4f5;">Can't wait? You can get the book now:</p>
       ${purchaseLinksHtml()}
       <p style="margin:24px 0 0;color:#a1a1aa;font-size:14px;">Questions? Reply to this email — we're at hello@klarify.africa.</p>
@@ -164,6 +175,8 @@ export function userConfirmationEmail(data: RegistrationPayload) {
       `Venue: ${LAUNCH_EVENT.venue}`,
       "",
       launchJoinLinkText(),
+      "",
+      readOnlineLinkText(),
       "",
       `Nigeria: ${BOOK_PURCHASE.nigeria.url}`,
       `International: ${BOOK_PURCHASE.international.url}`,
@@ -181,6 +194,7 @@ export function userConfirmationEmail(data: RegistrationPayload) {
   const html = layout(`
     <h1 style="margin:0 0 12px;font-size:24px;line-height:1.3;color:#ffffff;">Thank you, ${escapeHtml(firstName)}.</h1>
     <p style="margin:0 0 20px;color:#a1a1aa;">We've received your ${escapeHtml(label.toLowerCase())} request and will keep you updated.</p>
+    ${readOnlineLinkHtml()}
     ${purchaseLinksHtml()}
     <p style="margin:24px 0 0;color:#a1a1aa;font-size:14px;">Reply to this email anytime at hello@klarify.africa.</p>
   `);
@@ -189,6 +203,8 @@ export function userConfirmationEmail(data: RegistrationPayload) {
     `Hi ${firstName},`,
     "",
     `We've received your ${label.toLowerCase()} request.`,
+    "",
+    readOnlineLinkText(),
     "",
     `Nigeria: ${BOOK_PURCHASE.nigeria.url}`,
     `International: ${BOOK_PURCHASE.international.url}`,
