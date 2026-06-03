@@ -116,7 +116,7 @@ export function userConfirmationEmail(data: RegistrationPayload) {
 
     const html = layout(`
       <h1 style="margin:0 0 12px;font-size:24px;line-height:1.3;color:#ffffff;">You're on the list, ${escapeHtml(firstName)}.</h1>
-      <p style="margin:0 0 20px;color:#a1a1aa;">Thank you for registering for the virtual launch of <strong style="color:#f4f4f5;">${escapeHtml(SITE_NAME)}</strong>.</p>
+      <p style="margin:0 0 20px;color:#a1a1aa;">Thank you for registering for the Webinar, <strong style="color:#f4f4f5;">${escapeHtml(SITE_NAME)}</strong>.</p>
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;margin-bottom:24px;">
         <tr>
           <td style="padding:20px;">

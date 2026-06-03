@@ -36,7 +36,7 @@ export const BOOK_PURCHASE = {
 /** @deprecated Use BOOK_PURCHASE.international.url */
 export const BOOK_PURCHASE_URL = BOOK_PURCHASE.international.url;
 
-export const SITE_NAME = "The Founder's Guide to Building in Regulated Markets";
+export const SITE_NAME = "Building in Regulated Markets: What African Founders Aren't Being Told";
 
 export const HERO_HEADLINES = [
   "Building in Regulated Markets Starts Here, Nigeria first...",
