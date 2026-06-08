@@ -1,4 +1,5 @@
 import { LAUNCH_EVENT } from "@/lib/constants";
+import { buildRegistrationContactProperties } from "./contact-properties";
 import { getEmailConfig, getResend } from "./resend";
 import {
   adminNotificationEmail,
@@ -39,39 +40,40 @@ function getUpcomingFollowUps(): FollowUpSchedule[] {
   }));
 }
 
+function isDuplicateContactError(message: string): boolean {
+  const normalized = message.toLowerCase();
+  return (
+    normalized.includes("already exists") ||
+    normalized.includes("already been taken")
+  );
+}
+
 async function syncContact(data: RegistrationPayload): Promise<boolean> {
   const resend = getResend();
   const { segmentId } = getEmailConfig();
   const { firstName, lastName } = splitName(data.name);
+  const properties = buildRegistrationContactProperties(data);
 
   const { error } = await resend.contacts.create({
     email: data.email,
     firstName,
     lastName: lastName || undefined,
     unsubscribed: false,
-    properties: {
-      organization: data.organization ?? "",
-      role: data.role,
-      country: data.country,
-      registrationType: data.type,
-      source: "book.klarify.africa",
-    },
+    properties,
     ...(segmentId ? { segments: [{ id: segmentId }] } : {}),
   });
 
   if (error) {
-    // Contact may already exist — attempt update instead
+    if (!isDuplicateContactError(error.message)) {
+      console.warn("[Resend] Contact create failed:", error.message);
+      return false;
+    }
+
     const { error: updateError } = await resend.contacts.update({
       email: data.email,
       firstName,
       lastName: lastName || undefined,
-      properties: {
-        organization: data.organization ?? "",
-        role: data.role,
-        country: data.country,
-        registrationType: data.type,
-        source: "book.klarify.africa",
-      },
+      properties,
     });
 
     if (updateError) {
