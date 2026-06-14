@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     siteName: "Klarify",
     title: SITE_NAME,
     description:
-      "The strategic framework for building trust-ready products in African regulated markets. Register for the virtual launch.",
+      "The strategic framework for building trust-ready products in African regulated markets.",
     images: [
       {
         url: "/images/mockup-book.png",

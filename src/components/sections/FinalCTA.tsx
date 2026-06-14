@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
 import { BookPurchaseCTA } from "@/components/ui/BookPurchaseCTA";
 import { AnimatedSection } from "@/lib/animations";
 import { FadeIn } from "@/lib/animations";
@@ -17,22 +16,13 @@ export function FinalCTA() {
             <span className="gradient-text">Trust-Ready</span>.
           </h2>
           <p className="text-lg text-muted mb-10 max-w-2xl mx-auto">
-            Register for the virtual launch or get the book — be part of the
-            regulatory intelligence ecosystem.
+            Get the book and explore Klarify — the regulatory intelligence
+            infrastructure built for founders operating in African regulated markets.
           </p>
         </FadeIn>
 
         <FadeIn delay={0.2}>
           <div className="flex flex-col items-center gap-8">
-            <Button
-              href="#launch"
-              size="lg"
-              trackingLabel="Register for Launch"
-              trackingLocation="final-cta"
-            >
-              Register for Launch
-            </Button>
-
             <div className="w-full max-w-xl">
               <BookPurchaseCTA
                 location="final-cta"

@@ -85,8 +85,7 @@ export function RegistrationForm({
         </div>
         <h3 className="text-xl font-semibold mb-2">You&apos;re registered!</h3>
         <p className="text-muted">
-          Check your inbox for a confirmation email from Klarify. We&apos;ll send
-          launch reminders and joining details as the event approaches.
+          Check your inbox for a confirmation email from Klarify.
         </p>
         <button
           onClick={() => setStatus("idle")}

@@ -3,10 +3,9 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/Button";
 import { BookPurchaseCTA } from "@/components/ui/BookPurchaseCTA";
 import { ReadOnlineLinks } from "@/components/ui/ReadOnlineLinks";
-import { HERO_HEADLINES, LAUNCH_EVENT, SITE_LOGO, SITE_LOGO_ALT } from "@/lib/constants";
+import { HERO_HEADLINES, SITE_LOGO, SITE_LOGO_ALT } from "@/lib/constants";
 import { FadeIn } from "@/lib/animations";
 import { LandingIcon } from "@/components/ui/LandingIcon";
 
@@ -31,9 +30,9 @@ export function Hero() {
           <div className="space-y-8">
             <FadeIn>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5">
-                <LandingIcon name="calendar-days" className="h-4 w-4 text-emerald-400" />
+                <LandingIcon name="document-text" className="h-4 w-4 text-emerald-400" />
                 <span className="text-sm text-emerald-400 font-medium">
-                  Webinar · {LAUNCH_EVENT.date} · {LAUNCH_EVENT.time}
+                  Regulatory readiness for African founders
                 </span>
               </div>
             </FadeIn>
@@ -68,18 +67,7 @@ export function Hero() {
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <div className="flex flex-col gap-6">
-                <Button
-                  href="#launch"
-                  size="lg"
-                  trackingLabel="Register for Virtual Launch"
-                  trackingLocation="hero"
-                  className="w-full sm:w-auto"
-                >
-                  Register for Webinar
-                </Button>
-                <BookPurchaseCTA location="hero" layout="cards" align="left" />
-              </div>
+              <BookPurchaseCTA location="hero" layout="cards" align="left" />
             </FadeIn>
 
             <FadeIn delay={0.4}>
@@ -93,7 +81,8 @@ export function Hero() {
                   ))}
                 </div>
                 <p className="text-sm text-muted">
-                  Join founders, compliance teams, Lawyers, and institutions for the Webinar
+                  Built for founders, compliance teams, lawyers, and institutions
+                  operating in regulated markets
                 </p>
               </div>
             </FadeIn>

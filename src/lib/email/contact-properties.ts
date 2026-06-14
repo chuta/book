@@ -27,6 +27,7 @@ function isAlreadyExistsError(message: string): boolean {
   const normalized = message.toLowerCase();
   return (
     normalized.includes("already exists") ||
+    normalized.includes("already a contact property") ||
     normalized.includes("already been taken")
   );
 }
@@ -38,7 +39,7 @@ export async function bootstrapResendContactProperties(
     const { data, error } = await resend.contactProperties.create({
       key: property.key,
       type: property.type,
-      ...(property.fallbackValue !== undefined
+      ...("fallbackValue" in property && property.fallbackValue !== undefined
         ? { fallbackValue: property.fallbackValue }
         : {}),
     });

@@ -26,7 +26,7 @@ export function Footer() {
               {[
                 { label: "About the Book", href: "#about" },
                 { label: "Klarify Platform", href: "#klarify" },
-                { label: "Virtual Launch", href: "#launch" },
+                { label: "Get the Book", href: "#cta" },
                 { label: "About the Author", href: "#author" },
               ].map((link) => (
                 <li key={link.href}>

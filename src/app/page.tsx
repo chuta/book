@@ -7,7 +7,6 @@ import { WhoFor } from "@/components/sections/WhoFor";
 import { Klarify } from "@/components/sections/Klarify";
 import { Foreword } from "@/components/sections/Foreword";
 import { Author } from "@/components/sections/Author";
-import { Launch } from "@/components/sections/Launch";
 import { SocialProof } from "@/components/sections/SocialProof";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
@@ -23,7 +22,6 @@ export default function Home() {
         <Klarify />
         <Foreword />
         <Author />
-        <Launch />
         <SocialProof />
         <FinalCTA />
       </main>

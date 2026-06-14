@@ -6,7 +6,7 @@ export const SITE_URL = "https://book.klarify.africa";
 export const READ_ONLINE_FOUNDERS_URL = `${SITE_URL}/founders/`;
 
 export const SITE_LOGO = "/images/fgb.png";
-export const SITE_LOGO_ALT = "Founder's Guide Book Launch";
+export const SITE_LOGO_ALT = "The Founder's Guide — Klarify";
 
 export const KLARIFY_LOGO_URL = `${SITE_URL}/images/logo_white.png`;
 
@@ -271,6 +271,17 @@ export const LAUNCH_EVENT = {
     "Building the trust infrastructure Africa needs",
   ],
 };
+
+export const KLARIFY_URL = "https://klarify.africa";
+export const KLARIFY_PRODUCT_TOUR_URL = "https://klarify.africa/product-tour";
+
+/** Post-webinar attendee offer — Compass trial via coupon */
+export const WEBINAR_ATTENDEE_OFFER = {
+  couponCode: "KLARIFY-4F1Z",
+  planName: "Compass",
+  duration: "1 month",
+  expiresOn: "July 12, 2026",
+} as const;
 
 export const TESTIMONIALS = [
   {

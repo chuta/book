@@ -12,7 +12,6 @@ const NAV_LINKS = [
   { label: "Audience", href: "#audience" },
   { label: "Klarify", href: "#klarify" },
   { label: "Author", href: "#author" },
-  { label: "Webinar", href: "#launch" },
 ];
 
 export function Navbar() {
@@ -56,12 +55,12 @@ export function Navbar() {
             </a>
           ))}
           <Button
-            href="#launch"
+            href="#cta"
             size="sm"
-            trackingLabel="Register"
+            trackingLabel="Get the Book"
             trackingLocation="navbar"
           >
-            Register
+            Get the Book
           </Button>
         </div>
 
@@ -98,13 +97,13 @@ export function Navbar() {
                 </a>
               ))}
               <Button
-                href="#launch"
+                href="#cta"
                 size="sm"
                 className="w-full"
-                trackingLabel="Register"
+                trackingLabel="Get the Book"
                 trackingLocation="navbar-mobile"
               >
-                Register
+                Get the Book
               </Button>
             </div>
           </motion.div>

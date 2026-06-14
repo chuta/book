@@ -10,7 +10,7 @@ import type { RegistrationPayload } from "@/lib/email/types";
 import { isSupabaseConfigured } from "@/lib/supabase/server";
 import type { RegistrationType } from "@/lib/constants";
 
-const VALID_TYPES: RegistrationType[] = ["launch", "klarify", "book-updates"];
+const VALID_TYPES: RegistrationType[] = ["klarify", "book-updates"];
 
 function isValidType(value: string): value is RegistrationType {
   return VALID_TYPES.includes(value as RegistrationType);

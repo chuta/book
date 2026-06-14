@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import ws from "ws";
 
 export type BookRegistrationRow = {
   id: string;
@@ -37,6 +38,9 @@ export function getSupabaseAdmin(): SupabaseClient {
       auth: {
         autoRefreshToken: false,
         persistSession: false,
+      },
+      realtime: {
+        transport: ws as unknown as typeof WebSocket,
       },
     });
   }

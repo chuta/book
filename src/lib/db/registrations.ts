@@ -85,6 +85,42 @@ export async function updateRegistrationEmailStatus(
   }
 }
 
+export async function listRegistrationsByType(
+  type: RegistrationType
+): Promise<BookRegistrationRow[]> {
+  if (!isSupabaseConfigured()) {
+    throw new RegistrationPersistenceError("Database is not configured");
+  }
+
+  const supabase = getSupabaseAdmin();
+
+  const { data, error } = await supabase
+    .from(REGISTRATIONS_TABLE)
+    .select("*")
+    .eq("registration_type", type)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    console.error("[Supabase] List registrations failed:", error.message);
+    throw new RegistrationPersistenceError("Failed to list registrations");
+  }
+
+  return (data ?? []) as BookRegistrationRow[];
+}
+
+export function toRegistrationPayload(
+  row: BookRegistrationRow
+): RegistrationPayload {
+  return {
+    name: row.name,
+    email: row.email,
+    organization: row.organization ?? undefined,
+    role: row.role,
+    country: row.country,
+    type: row.registration_type as RegistrationType,
+  };
+}
+
 export async function getRegistrationByEmailAndType(
   email: string,
   type: RegistrationType
